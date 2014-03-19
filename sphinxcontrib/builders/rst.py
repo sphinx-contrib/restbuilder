@@ -90,7 +90,7 @@ class RstBuilder(Builder):
                 yield docname
                 continue
             sourcename = path.join(self.env.srcdir, docname +
-                                   self.env.source_suffix)
+                                   self.file_suffix)
             targetname = path.join(self.outdir, self.file_transform(docname))
             print (sourcename, targetname)
 
