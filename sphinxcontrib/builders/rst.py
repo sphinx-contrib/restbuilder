@@ -41,9 +41,9 @@ def relative_uri(base, to):
         # returns '', not 'index.html'
         return ''
     if len(b2) == 1 and t2 == ['']:
-        # Special case: relative_uri('f/index.html','f/') should 
+        # Special case: relative_uri('f/index.html','f/') should
         # return './', not ''
-        return '.' +  SEP
+        return '.' + SEP
     return ('..' + SEP) * (len(b2)-1) + SEP.join(t2)
 
 
@@ -59,21 +59,22 @@ class RstBuilder(Builder):
             self.file_suffix = self.config.rst_file_suffix
         if self.config.rst_link_suffix is not None:
             self.link_suffix = self.config.rst_link_suffix
-        elif self.link_suffix == None:
+        elif self.link_suffix is None:
             self.link_suffix = self.file_suffix
 
         # Function to convert the docname to a reST file name.
         def file_transform(docname):
             return docname + self.file_suffix
+
         # Function to convert the docname to a relative URI.
         def link_transform(docname):
             return docname + self.link_suffix
 
-        if self.config.rst_file_transform != None:
+        if self.config.rst_file_transform is not None:
             self.file_transform = self.config.rst_file_transform
         else:
             self.file_transform = file_transform
-        if self.config.rst_link_transform != None:
+        if self.config.rst_link_transform is not None:
             self.link_transform = self.config.rst_link_transform
         else:
             self.link_transform = link_transform
@@ -88,8 +89,8 @@ class RstBuilder(Builder):
             if docname not in self.env.all_docs:
                 yield docname
                 continue
-            sourcename = path.join(self.env.srcdir, docname + 
-                        self.env.source_suffix)
+            sourcename = path.join(self.env.srcdir, docname +
+                                   self.env.source_suffix)
             targetname = path.join(self.outdir, self.file_transform(docname))
             print (sourcename, targetname)
 
@@ -112,7 +113,7 @@ class RstBuilder(Builder):
         """
         Return a relative URI between two source filenames.
         """
-        # This is slightly different from Builder.get_relative_uri, 
+        # This is slightly different from Builder.get_relative_uri,
         # as it contains a small bug (which was fixed in Sphinx 1.2).
         return relative_uri(self.get_target_uri(from_),
                             self.get_target_uri(to, typ))
