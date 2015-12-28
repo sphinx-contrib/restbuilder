@@ -60,6 +60,10 @@ class RstTranslator(TextTranslator):
         self.list_counter = []
         self.sectionlevel = 0
         self.table = None
+        if self.builder.config.rst_indent:
+            self.indent = self.builder.config.rst_indent
+        else:
+            self.indent = STDINDENT
         self.wrapper = textwrap.TextWrapper(width=STDINDENT, break_long_words=False, break_on_hyphens=False)
 
     def log_unknown(self, type, node):
@@ -254,12 +258,12 @@ class RstTranslator(TextTranslator):
         pass
 
     def visit_desc_content(self, node):
-        self.new_state()
+        self.new_state(self.indent)
     def depart_desc_content(self, node):
         self.end_state()
 
     def visit_figure(self, node):
-        self.new_state()
+        self.new_state(self.indent)
     def depart_figure(self, node):
         self.end_state()
 
@@ -270,7 +274,7 @@ class RstTranslator(TextTranslator):
         pass
 
     def visit_productionlist(self, node):
-        self.new_state()
+        self.new_state(self.indent)
         names = []
         for production in node:
             names.append(production['tokenname'])
@@ -286,13 +290,13 @@ class RstTranslator(TextTranslator):
         raise nodes.SkipNode
 
     def visit_seealso(self, node):
-        self.new_state()
+        self.new_state(self.indent)
     def depart_seealso(self, node):
         self.end_state(first='')
 
     def visit_footnote(self, node):
         self._footnote = node.children[0].astext().strip()
-        self.new_state(len(self._footnote) + 3)
+        self.new_state(len(self._footnote) + self.indent)
     def depart_footnote(self, node):
         self.end_state(first='[%s] ' % self._footnote)
 
@@ -301,7 +305,7 @@ class RstTranslator(TextTranslator):
             self._citlabel = node[0].astext()
         else:
             self._citlabel = ''
-        self.new_state(len(self._citlabel) + 3)
+        self.new_state(len(self._citlabel) + self.indent)
     def depart_citation(self, node):
         self.end_state(first='[%s] ' % self._citlabel)
 
@@ -484,14 +488,14 @@ class RstTranslator(TextTranslator):
     def visit_list_item(self, node):
         if self.list_counter[-1] == -1:
             # bullet list
-            self.new_state(2)
+            self.new_state(self.indent)
         elif self.list_counter[-1] == -2:
             # definition list
             pass
         else:
             # enumerated list
             self.list_counter[-1] += 1
-            self.new_state(len(str(self.list_counter[-1])) + 2)
+            self.new_state(len(str(self.list_counter[-1])) + self.indent)
     def depart_list_item(self, node):
         if self.list_counter[-1] == -1:
             self.end_state(first='* ', end=None)
@@ -522,7 +526,7 @@ class RstTranslator(TextTranslator):
         self.end_state(end=None)
 
     def visit_definition(self, node):
-        self.new_state()
+        self.new_state(self.indent)
     def depart_definition(self, node):
         self.end_state()
 
@@ -545,7 +549,7 @@ class RstTranslator(TextTranslator):
         self.add_text((16-len(content))*' ')
 
     def visit_field_body(self, node):
-        self.new_state()
+        self.new_state(self.indent)
     def depart_field_body(self, node):
         self.end_state()
 
@@ -572,7 +576,7 @@ class RstTranslator(TextTranslator):
         self.end_state()
 
     def _visit_admonition(self, node):
-        self.new_state(2)
+        self.new_state(self.indent)
     def _make_depart_admonition(name):
         def depart_admonition(self, node):
             self.end_state(first=admonitionlabels[name] + ': ')
@@ -608,7 +612,7 @@ class RstTranslator(TextTranslator):
 
     def visit_literal_block(self, node):
         self.add_text("::")
-        self.new_state()
+        self.new_state(self.indent)
     def depart_literal_block(self, node):
         self.end_state(wrap=False)
 
@@ -630,7 +634,7 @@ class RstTranslator(TextTranslator):
 
     def visit_block_quote(self, node):
         self.add_text('..')
-        self.new_state()
+        self.new_state(self.indent)
     def depart_block_quote(self, node):
         self.end_state()
 

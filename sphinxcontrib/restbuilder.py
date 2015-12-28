@@ -14,6 +14,7 @@
 from __future__ import (print_function, unicode_literals, absolute_import)
 
 from sphinx.builders import Builder
+from sphinx.writers.text import STDINDENT
 from .builders.rst import RstBuilder
 from .writers.rst import RstWriter
 
@@ -30,3 +31,4 @@ def setup(app):
     """Function to translate a docname to a filename. By default, returns docname + rst_file_suffix."""
     app.add_config_value('rst_link_transform', None, False)
     """Function to translate a docname to a (partial) URI. By default, returns docname + rst_link_suffix."""
+    app.add_config_value('rst_indent', STDINDENT, False)
