@@ -668,10 +668,45 @@ class RstTranslator(TextTranslator):
         pass
 
     def visit_reference(self, node):
+        """Run upon entering a reference
+
+        Because this class inherits from the TextTranslator class,
+        regularly defined links, such as::
+
+            `Some Text`_
+
+            .. _Some Text: http://www.some_url.com
+
+        were being written as plaintext. This included internal
+        references defined in the standard rst way, such as::
+
+            `Some Reference`
+
+            .. _Some Reference:
+
+            Some Title
+            ----------
+
+        To resolve this, if ``refuri`` is not included in the node (an
+        internal, non-Sphinx-defined internal uri, the reference is
+        left unchanged (e.g. ```Some Text`_`` is written as such).
+
+        If ``internal`` is not in the node (as for an external,
+        non-Sphinx URI, the reference is rewritten as an inline link,
+        e.g. ```Some Text <http://www.some_url.com>`_``.
+
+        If ``reftitle` is in the node (as in a Sphinx-generated
+        reference), the node is converted to an inline link.
+
+        Finally, all other links are also converted to an inline link
+        format.
+        """
         if 'refuri' not in node:
-            pass # Don't add these anchors
+            self.add_text('`%s`_' % node['name'])
+            raise nodes.SkipNode
         elif 'internal' not in node:
-            pass # Don't add external links (they are automatically added by the reST spec)
+            self.add_text('`%s <%s>`_' % (node['name'], node['refuri']))
+            raise nodes.SkipNode
         elif 'reftitle' in node:
             # Include node as text, rather than with markup.
             # reST seems unable to parse a construct like ` ``literal`` <url>`_
@@ -682,7 +717,7 @@ class RstTranslator(TextTranslator):
         else:
             self.add_text('`%s <%s>`_' % (node.astext(), node['refuri']))
             raise nodes.SkipNode
-            
+
     def depart_reference(self, node):
         if 'refuri' not in node:
             pass # Don't add these anchors
