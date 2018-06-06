@@ -385,7 +385,7 @@ class RstTranslator(TextTranslator):
         pass
 
     def visit_entry(self, node):
-        if node.has_key('morerows') or node.has_key('morecols'):
+        if 'morerows' in node or 'morecols' in node:
             raise NotImplementedError('Column or row spanning cells are '
                                       'not implemented.')
         self.new_state(0)
@@ -414,7 +414,7 @@ class RstTranslator(TextTranslator):
                 for i, cell in enumerate(line):
                     par = self.wrap(cell, width=colwidths[i])
                     if par:
-                        maxwidth = max(map(len, par))
+                        maxwidth = max(list(map(len, par)))
                     else:
                         maxwidth = 0
                     realwidths[i] = max(realwidths[i], maxwidth)
@@ -429,7 +429,7 @@ class RstTranslator(TextTranslator):
             self.add_text(''.join(out) + self.nl)
 
         def writerow(row):
-            lines = zip(*row)
+            lines = list(zip(*row))
             for line in lines:
                 out = ['|']
                 for i, cell in enumerate(line):
