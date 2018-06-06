@@ -20,12 +20,12 @@ requires = ['Sphinx>=1.0']
 
 setup(
     name='sphinxcontrib-restbuilder',
-    version='0.1',
-    url='http://bitbucket.org/birkenfeld/sphinx-contrib',
+    version='0.2',
+    url='https://github.com/sphinx-contrib/restbuilder',
     download_url='http://pypi.python.org/pypi/sphinxcontrib-restbuilder',
     license='BSD', # 2-clause
     author='Freek Dijkstra',
-    author_email='software@macfreek.nl',
+    author_email='freek@macfreek.nl',
     description='Sphinx extension to output reST files.',
     long_description=long_desc,
     zip_safe=False,

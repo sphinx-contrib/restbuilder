@@ -1,6 +1,13 @@
 Changelog
 =========
 
+restbuilder 0.2 (7 June 2018)
+--------------------------------
+* Code moved to https://gitub.com/sphinx-contrib/restbuilder
+* Python 3 compatible (Nicola Musatti)
+* Adhere to rst_indent-specified indentation (Matthew Planchard)
+* Fixed issue where links were converted to plaintext (Matthew Planchard)
+
 restbuilder 0.1 (25 August 2013)
 --------------------------------
 * Code submitted to sphinx-contrib
