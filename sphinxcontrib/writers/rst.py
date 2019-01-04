@@ -202,30 +202,39 @@ class RstTranslator(TextTranslator):
     def depart_desc(self, node):
         self.end_state()
 
+    SIGNATURES_TO_SKIP = ('exception', 'class', 'method', 'function')
+
     def visit_desc_signature(self, node):
-        if node.parent['objtype'] in ('class', 'exception', 'method', 'function'):
-            self.add_text('**')
+        # Don't want to bold the entire signature, so we are
+        # passing formatting down to other writer functions.
+        # Example of sub nodes to look for: desc_name, desc_addname,
+        if node.parent['objtype'] in self.SIGNATURES_TO_SKIP:
+            pass
         else:
             self.add_text('``')
 
     def depart_desc_signature(self, node):
-        if node.parent['objtype'] in ('class', 'exception', 'method', 'function'):
-            self.add_text('**')
+        if node.parent['objtype'] in self.SIGNATURES_TO_SKIP:
+            pass
         else:
             self.add_text('``')
 
     def visit_desc_name(self, node):
         # self.log_unknown("desc_name", node)
+        self.add_text('**')
         pass
 
     def depart_desc_name(self, node):
+        self.add_text('**\ ')
         pass
 
     def visit_desc_addname(self, node):
+        self.add_text('*')
         # self.log_unknown("desc_addname", node)
         pass
 
     def depart_desc_addname(self, node):
+        self.add_text('*\ ')
         pass
 
     def visit_desc_type(self, node):
@@ -864,7 +873,12 @@ class RstTranslator(TextTranslator):
         raise nodes.SkipNode
 
     def visit_Text(self, node):
-        self.add_text(node.astext())
+        # Stripping newlines from paragraphs so that we don't
+        # mess with the normal text wrapping.
+        if isinstance(node.parent, nodes.paragraph):
+            self.add_text(node.astext().replace('\n', ' '))
+        else:
+            self.add_text(node.astext())
 
     def depart_Text(self, node):
         pass
