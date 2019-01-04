@@ -220,7 +220,7 @@ class RstTranslator(TextTranslator):
             self.add_text('``')
 
     def visit_desc_name(self, node):
-        # self.log_unknown("desc_name", node)
+        # Bold named objects (e.g. "this.is.my.**ClassName**\ ")
         self.add_text('**')
         pass
 
@@ -229,8 +229,9 @@ class RstTranslator(TextTranslator):
         pass
 
     def visit_desc_addname(self, node):
+        # Italicize module names before classes
+        # (e.g. "*this.is.my.*\ ClassName")
         self.add_text('*')
-        # self.log_unknown("desc_addname", node)
         pass
 
     def depart_desc_addname(self, node):
