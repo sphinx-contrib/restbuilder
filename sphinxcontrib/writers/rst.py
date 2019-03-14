@@ -460,7 +460,10 @@ class RstTranslator(TextTranslator):
     def visit_image(self, node):
         if 'alt' in node.attributes:
             self.add_text(_('[image: %s]') % node['alt'])
-        self.add_text(_('[image]'))
+        elif 'target' in node.attributes:
+            self.add_text(_('.. image: %s') % node['target'])
+        else:
+            self.add_text(_('[image]'))
         raise nodes.SkipNode
 
     def visit_transition(self, node):
