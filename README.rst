@@ -17,7 +17,9 @@ Requirements
 ============
 
 * Sphinx_ 1.0 or later
-* Python 2.6 or later
+* Python 3.4 or later
+
+Python 2.7 still works fine too, but is no longer supported.
 
 Installing
 ==========
@@ -30,13 +32,13 @@ Using pip
 Manual
 ------
 
-    hg clone http://bitbucket.org/birkenfeld/sphinx-contrib
-    cd sphinx-contrib/restbuilder
+    git clone https://github.com/sphinx-contrib/restbuilder.git
+    cd restbuilder
     python setup.py install
 
-If you want to take a look and have a try, you can put the reST builder in
-an extension subdirectory, and adjust ``sys.path`` to tell Sphinx where to
-look for it:
+If you want to try reST builder without using the setuptools installer,
+you can put the reST builder in an extension subdirectory, and adjust
+``sys.path`` to tell Sphinx where to look for it:
 
 - Add the extensions directory to the path in ``conf.py``. E.g.
 
