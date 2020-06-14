@@ -13,7 +13,6 @@ from __future__ import (print_function, unicode_literals, absolute_import)
 
 import os
 import sys
-import re
 import textwrap
 import logging
 
@@ -458,12 +457,16 @@ class RstTranslator(TextTranslator):
         raise nodes.SkipNode
 
     def visit_image(self, node):
-        if 'alt' in node.attributes:
-            self.add_text(_('[image: %s]') % node['alt'])
+        self.new_state(0)
+        if 'uri' in node:
+            self.add_text(_('.. image:: %s') % node['uri'])
         elif 'target' in node.attributes:
             self.add_text(_('.. image: %s') % node['target'])
+        elif 'alt' in node.attributes:
+            self.add_text(_('[image: %s]') % node['alt'])
         else:
             self.add_text(_('[image]'))
+        self.end_state(wrap=False)
         raise nodes.SkipNode
 
     def visit_transition(self, node):
@@ -708,7 +711,10 @@ class RstTranslator(TextTranslator):
         Finally, all other links are also converted to an inline link
         format.
         """
-        if 'refuri' not in node:
+        if 'name' not in node:
+            self.add_text('`%s`_' % node.astext())
+            raise nodes.SkipNode
+        elif 'refuri' not in node:
             self.add_text('`%s`_' % node['name'])
             raise nodes.SkipNode
         elif 'internal' not in node:
