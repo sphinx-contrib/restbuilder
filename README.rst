@@ -17,9 +17,7 @@ Requirements
 ============
 
 * Sphinx_ 1.0 or later
-* Python 3.4 or later
-
-Python 2.7 still works fine too, but is no longer supported.
+* Python 3.5 or later
 
 Installing
 ==========
