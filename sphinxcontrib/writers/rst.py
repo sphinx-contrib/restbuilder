@@ -778,9 +778,10 @@ class RstTranslator(TextTranslator):
         self.add_text('``')
 
     def visit_subscript(self, node):
-        self.add_text('_')
+        self.add_text(':sub:`')
+
     def depart_subscript(self, node):
-        pass
+        self.add_text('`')
 
     def visit_superscript(self, node):
         self.add_text('^')
