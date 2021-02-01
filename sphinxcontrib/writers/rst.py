@@ -19,9 +19,13 @@ import logging
 from docutils import nodes, writers
 
 from sphinx import addnodes
-from sphinx.locale import admonitionlabels, versionlabels, _
+from sphinx.locale import admonitionlabels, _
 from sphinx.writers.text import TextTranslator, MAXWIDTH, STDINDENT
-
+try:
+    from sphinx.domains.changeset import versionlabels
+except ImportErrror:
+    # Support for Sphinx < 1.8.0
+    from sphinx.locale import versionlabels
 
 class RstWriter(writers.Writer):
     supported = ('text',)
