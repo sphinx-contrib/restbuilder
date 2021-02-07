@@ -20,7 +20,7 @@ def build_sphinx(src_dir, files=None):
     filenames = []
     force_all = True
 
-    config = {'extensions': ['sphinxcontrib.restbuilder']}
+    config = {'extensions': ['sphinxcontrib.restbuilder'], 'master_doc': 'index'}
 
     if files:
         force_all = False

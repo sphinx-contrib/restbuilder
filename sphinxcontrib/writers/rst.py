@@ -711,10 +711,7 @@ class RstTranslator(TextTranslator):
         Finally, all other links are also converted to an inline link
         format.
         """
-        if 'name' not in node:
-            self.add_text('`%s`_' % node.astext())
-            raise nodes.SkipNode
-        elif 'refuri' not in node:
+        if 'refuri' not in node and 'name' in node:
             self.add_text('`%s`_' % node['name'])
             raise nodes.SkipNode
         elif 'internal' not in node:
