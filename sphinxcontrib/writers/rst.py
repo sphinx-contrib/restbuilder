@@ -21,11 +21,7 @@ from docutils import nodes, writers
 from sphinx import addnodes
 from sphinx.locale import admonitionlabels, _
 from sphinx.writers.text import TextTranslator, MAXWIDTH, STDINDENT
-try:
-    from sphinx.domains.changeset import versionlabels
-except ImportErrror:
-    # Support for Sphinx < 1.8.0
-    from sphinx.locale import versionlabels
+
 
 class RstWriter(writers.Writer):
     supported = ('text',)
@@ -613,10 +609,6 @@ class RstTranslator(TextTranslator):
 
     def visit_versionmodified(self, node):
         self.new_state(0)
-        if node.children:
-            self.add_text(versionlabels[node['type']] % node['version'] + ': ')
-        else:
-            self.add_text(versionlabels[node['type']] % node['version'] + '.')
     def depart_versionmodified(self, node):
         self.end_state()
 
