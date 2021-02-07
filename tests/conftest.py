@@ -15,3 +15,18 @@ def expected_common_dir():
     return os.path.join(
         os.path.dirname(os.path.realpath(__file__)), 'expected', 'common'
     )
+
+
+@pytest.fixture
+def sphinx_src_dir():
+    return os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), 'datasets', 'sphinx-specific'
+    )
+
+
+@pytest.fixture
+def expected_sphinx_dir():
+    return os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), 'expected', 'sphinx-specific'
+    )
+
