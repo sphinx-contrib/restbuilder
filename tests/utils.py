@@ -8,7 +8,25 @@ from docutils.nodes import Text, Element
 from docutils.parsers.rst import Parser
 from docutils.utils import new_document
 from sphinx.application import Sphinx
-from sphinx.util.docutils import docutils_namespace
+
+# sphinx.util.docutils requires Sphinx 1.5 and up.
+try:
+    from sphinx.util.docutils import docutils_namespace
+except ImportError:
+    # Attempt to support Sphinx 1.4 and thus the old Debian Stretch (oldstable)
+    from copy import copy
+    from contextlib import contextmanager
+    from docutils.parsers.rst import directives, roles
+    @contextmanager
+    def docutils_namespace():
+        """Create namespace for reST parsers."""
+        try:
+            _directives = copy(directives._directives)
+            _roles = copy(roles._roles)
+            yield
+        finally:
+            directives._directives = _directives
+            roles._roles = _roles
 
 
 def build_sphinx(src_dir, files=None):
@@ -77,3 +95,6 @@ def parse_doc(dir, file):
             doc,
         )
         return doc
+
+if __name__ == '__main__':
+    pass
