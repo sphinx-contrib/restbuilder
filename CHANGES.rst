@@ -1,6 +1,16 @@
 Changelog
 =========
 
+restbuilder 0.3 (2021)
+--------------------------------
+* Now requires Sphinx 1.4 or higher (drop support for 1.0-1.3)
+* Now requires Python 3.5 or higher (drop support for 2.7 and 3.0-3.4)
+* Fix versionadd directive for Sphinx >= 3.0 (Ned Batchelder)
+
+* Add test suite (Jack Burridge)
+* Add tox script and Github workflow to easily run tests
+
+
 restbuilder 0.2 (7 June 2018)
 --------------------------------
 * Code moved to https://gitub.com/sphinx-contrib/restbuilder
