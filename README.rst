@@ -16,7 +16,7 @@ file from Sphinx_ and outputs it as reST.
 Requirements
 ============
 
-* Sphinx_ 1.0 or later
+* Sphinx_ 1.4 or later
 * Python 3.5 or later
 
 Installing
@@ -25,10 +25,14 @@ Installing
 Using pip
 ---------
 
+::
+
     pip install sphinxcontrib-restbuilder
 
 Manual
 ------
+
+::
 
     git clone https://github.com/sphinx-contrib/restbuilder.git
     cd restbuilder
@@ -38,18 +42,18 @@ If you want to try reST builder without using the setuptools installer,
 you can put the reST builder in an extension subdirectory, and adjust
 ``sys.path`` to tell Sphinx where to look for it:
 
-- Add the extensions directory to the path in ``conf.py``. E.g.
+- Add the extensions directory to the path in ``conf.py``. E.g.::
 
     sys.path.append(os.path.abspath('exts'))
 
 Usage
 =====
 
-- Set the builder as a extension in ``conf.py``:
+- Set the builder as a extension in ``conf.py``::
 
     extensions = ['sphinxcontrib.restbuilder']
 
-- Run sphinx-build with target ``rst``:
+- Run sphinx-build with target ``rst``::
 
     sphinx-build -b rst -c . build/rst
 
@@ -58,25 +62,21 @@ Configuration
 
 The following four configuration variables are defined by sphinxcontrib.restbuilder:
 
-.. confval:: rst_file_suffix
+:literal:`rst_file_suffix`
+  This is the file name suffix for generated reST files.  The default is
+  ``".rst"``.
 
-   This is the file name suffix for generated reST files.  The default is
-   ``".rst"``.
+:literal:`rst_link_suffix`
+  Suffix for generated links to reST files.  The default is whatever
+  `rst_file_suffix` is set to.
 
-.. confval:: rst_link_suffix
+:literal:`rst_file_transform`
+  Function to translate a docname to a filename. 
+  By default, returns `docname` + :literal:`rst_file_suffix`.
 
-   Suffix for generated links to reST files.  The default is whatever
-   :confval:`rst_file_suffix` is set to.
-
-.. confval:: rst_file_transform
-
-   Function to translate a docname to a filename. 
-   By default, returns `docname` + :confval:`rst_file_suffix`.
-
-.. confval:: rst_link_transform
-
-   Function to translate a docname to a (partial) URI. 
-   By default, returns `docname` + :confval:`rst_link_suffix`.
+:literal:`rst_link_transform`:
+  Function to translate a docname to a (partial) URI. 
+  By default, returns `docname` + :literal:`rst_link_suffix`.
 
 
 Further Reading
