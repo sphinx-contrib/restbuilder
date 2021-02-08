@@ -708,8 +708,14 @@ class RstTranslator(TextTranslator):
         format.
         """
         if 'name' not in node:
-            self.add_text('`%s`_' % node.astext())
-            raise nodes.SkipNode
+            if 'refuri' not in node:
+                self.add_text('`%s`_' % node.astext())
+                raise nodes.SkipNode
+            elif node.astext() == node['refuri']:
+                pass
+            else:
+                self.add_text('`%s <%s>`_' % (node.astext(), node['refuri']))
+                raise nodes.SkipNode
         elif 'refuri' not in node:
             self.add_text('`%s`_' % node['name'])
             raise nodes.SkipNode
