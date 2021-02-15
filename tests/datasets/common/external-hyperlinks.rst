@@ -3,6 +3,9 @@ Embedded external hyperlinks, like `Python
 
 Indirect external hyperlinks, like Larch_ or Python_.
 
+`Write to me`_ with your questions.
+
+.. _Write to me: jdoe@example.com
 .. _Larch: https://en.wikipedia.org/wiki/Larch
 
 Anonymous hyperlinks, like `the web site of my favorite programming language`__.
