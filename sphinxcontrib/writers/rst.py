@@ -613,8 +613,18 @@ class RstTranslator(TextTranslator):
         self.end_state()
 
     def visit_literal_block(self, node):
-        self.add_text("::")
+        if node.get('language', 'default') != 'default':
+            directive = ".. code:: %s" % node['language']
+        else:
+            directive = "::"
+        if node.get('linenos'):
+            indent = self.indent * ' '
+            directive += "\n%s:number-lines:" % (indent)
+        self.new_state(0)
+        self.add_text(directive)
+        self.end_state(wrap=False)
         self.new_state(self.indent)
+
     def depart_literal_block(self, node):
         self.end_state(wrap=False)
 
@@ -635,7 +645,6 @@ class RstTranslator(TextTranslator):
         pass
 
     def visit_block_quote(self, node):
-        self.add_text('..')
         self.new_state(self.indent)
     def depart_block_quote(self, node):
         self.end_state()
