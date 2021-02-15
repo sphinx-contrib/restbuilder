@@ -29,7 +29,7 @@ except ImportError:
             roles._roles = _roles
 
 
-def build_sphinx(src_dir, files=None):
+def build_sphinx(src_dir, files=None, config={}):
     out_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'output')
     shutil.rmtree(out_dir, ignore_errors=True)
 
@@ -38,7 +38,11 @@ def build_sphinx(src_dir, files=None):
     filenames = []
     force_all = True
 
-    config = {'extensions': ['sphinxcontrib.restbuilder']}
+    default_config = {
+        'extensions': ['sphinxcontrib.restbuilder'],
+    }
+    default_config.update(config)
+    config = default_config
 
     if files:
         force_all = False
