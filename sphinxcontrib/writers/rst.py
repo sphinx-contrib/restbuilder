@@ -666,7 +666,11 @@ class RstTranslator(TextTranslator):
     def visit_target(self, node):
         if 'refid' in node:
             self.new_state(0)
-            self.add_text('.. _'+node['refid']+':'+self.nl)
+            if node.get('ids'):
+                for id in node['ids']:
+                    self.add_text('.. _%s: %s_%s' % (id, node['refid'], self.nl))
+            else:
+                self.add_text('.. _'+node['refid']+':'+self.nl)
     def depart_target(self, node):
         if 'refid' in node:
             self.end_state(wrap=False)
