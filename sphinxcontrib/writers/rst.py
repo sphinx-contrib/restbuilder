@@ -826,9 +826,9 @@ class RstTranslator(TextTranslator):
         pass
 
     def visit_problematic(self, node):
-        self.add_text('>>')
+        pass
     def depart_problematic(self, node):
-        self.add_text('<<')
+        pass
 
     def visit_system_message(self, node):
         self.new_state(0)
