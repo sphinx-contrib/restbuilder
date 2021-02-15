@@ -63,7 +63,7 @@ class RstTranslator(TextTranslator):
             self.indent = self.builder.config.rst_indent
         else:
             self.indent = STDINDENT
-        self.wrapper = textwrap.TextWrapper(width=STDINDENT, break_long_words=False, break_on_hyphens=False)
+        self.wrapper = textwrap.TextWrapper(width=MAXWIDTH, break_long_words=False, break_on_hyphens=False)
 
     def log_unknown(self, type, node):
         logger = logging.getLogger("sphinxcontrib.writers.rst")
@@ -73,7 +73,7 @@ class RstTranslator(TextTranslator):
             logger = logging.getLogger("sphinxcontrib.writers.rst")
         logger.warning("%s(%s) unsupported formatting" % (type, node))
 
-    def wrap(self, text, width=STDINDENT):
+    def wrap(self, text, width=MAXWIDTH):
         self.wrapper.width = width
         return self.wrapper.wrap(text)
 
@@ -84,7 +84,7 @@ class RstTranslator(TextTranslator):
         self.stateindent.append(indent)
     def end_state(self, wrap=True, end=[''], first=None):
         content = self.states.pop()
-        maxindent = sum(self.stateindent)
+        width = max(MAXWIDTH//3, MAXWIDTH - sum(self.stateindent))
         indent = self.stateindent.pop()
         result = []
         toformat = []
@@ -92,7 +92,7 @@ class RstTranslator(TextTranslator):
             if not toformat:
                 return
             if wrap:
-                res = self.wrap(''.join(toformat), width=MAXWIDTH-maxindent)
+                res = self.wrap(''.join(toformat), width=width)
             else:
                 res = ''.join(toformat).splitlines()
             if end:
