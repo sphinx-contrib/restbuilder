@@ -727,13 +727,19 @@ class RstTranslator(TextTranslator):
             elif node.astext() == node['refuri']:
                 pass
             else:
-                self.add_text('`%s <%s>`_' % (node.astext(), node['refuri']))
+                nodeuri = node['refuri']
+                if nodeuri.endswith('_'):
+                    nodeuri = nodeuri[:-1] + '\\_'
+                self.add_text('`%s <%s>`_' % (node.astext(), nodeuri))
                 raise nodes.SkipNode
         elif 'refuri' not in node:
             self.add_text('`%s`_' % node['name'])
             raise nodes.SkipNode
         elif 'internal' not in node:
-            self.add_text('`%s <%s>`_' % (node['name'], node['refuri']))
+            nodeuri = node['refuri']
+            if nodeuri.endswith('_'):
+                nodeuri = nodeuri[:-1] + '\\_'
+            self.add_text('`%s <%s>`_' % (node['name'], nodeuri))
             raise nodes.SkipNode
         elif 'reftitle' in node:
             # Include node as text, rather than with markup.
