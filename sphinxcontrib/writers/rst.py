@@ -615,6 +615,8 @@ class RstTranslator(TextTranslator):
     def visit_literal_block(self, node):
         if node.get('language', 'default') != 'default':
             directive = ".. code:: %s" % node['language']
+        elif node.get('highlight_args') is not None:
+            directive = ".. code::"
         else:
             directive = "::"
         if node.get('linenos'):
