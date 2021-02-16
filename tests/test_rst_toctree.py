@@ -19,20 +19,20 @@ def expected_toctree_dir():
     )
 
 
-def test_toctree(toctree_src_dir, expected_toctree_dir):
-    out_dir = build_sphinx(toctree_src_dir)
+def test_toctree(toctree_src_dir, expected_toctree_dir, output_dir):
+    build_sphinx(toctree_src_dir, output_dir)
 
     assert_doc_equal(
-        parse_doc(out_dir, 'index'),
+        parse_doc(output_dir, 'index'),
         parse_doc(expected_toctree_dir, 'index'),
     )
 
     assert_doc_equal(
-        parse_doc(out_dir, 'doc1'),
+        parse_doc(output_dir, 'doc1'),
         parse_doc(expected_toctree_dir, 'doc1'),
     )
 
     assert_doc_equal(
-        parse_doc(out_dir, 'doc2'),
+        parse_doc(output_dir, 'doc2'),
         parse_doc(expected_toctree_dir, 'doc2'),
     )

@@ -1,5 +1,4 @@
 import os
-import shutil
 from itertools import zip_longest
 
 import docutils
@@ -29,11 +28,8 @@ except ImportError:
             roles._roles = _roles
 
 
-def build_sphinx(src_dir, files=None, config={}):
-    out_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'output')
-    shutil.rmtree(out_dir, ignore_errors=True)
-
-    doctrees_dir = os.path.join(out_dir, '.doctrees')
+def build_sphinx(src_dir, output_dir, files=None, config={}):
+    doctrees_dir = os.path.join(output_dir, '.doctrees')
 
     filenames = []
     force_all = True
@@ -54,7 +50,7 @@ def build_sphinx(src_dir, files=None, config={}):
         app = Sphinx(
             src_dir,
             None,
-            out_dir,
+            output_dir,
             doctrees_dir,
             'rst',
             confoverrides=config,
@@ -62,7 +58,6 @@ def build_sphinx(src_dir, files=None, config={}):
         )
 
         app.build(force_all=force_all, filenames=filenames)
-    return out_dir
 
 
 def assert_node_equal(n1, n2):
