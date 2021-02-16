@@ -40,6 +40,7 @@ def build_sphinx(src_dir, files=None, config={}):
 
     default_config = {
         'extensions': ['sphinxcontrib.restbuilder'],
+        'master_doc': 'index',
     }
     default_config.update(config)
     config = default_config
