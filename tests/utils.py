@@ -1,4 +1,4 @@
-import os
+from os.path import join
 from itertools import zip_longest
 
 import docutils
@@ -29,7 +29,7 @@ except ImportError:
 
 
 def build_sphinx(src_dir, output_dir, files=None, config={}):
-    doctrees_dir = os.path.join(output_dir, '.doctrees')
+    doctrees_dir = join(output_dir, '.doctrees')
 
     filenames = []
     force_all = True
@@ -43,7 +43,7 @@ def build_sphinx(src_dir, output_dir, files=None, config={}):
 
     if files:
         force_all = False
-        filenames = [os.path.join(src_dir, file + '.rst') for file in files]
+        filenames = [join(src_dir, file + '.rst') for file in files]
         config['master_doc'] = files[0]
 
     with docutils_namespace():
@@ -83,7 +83,7 @@ def assert_doc_equal(doc1, doc2):
 
 def parse_doc(dir, file):
     parser = Parser()
-    with open(os.path.join(dir, file + '.rst')) as fh:
+    with open(join(dir, file + '.rst')) as fh:
         doc = new_document(
             file,
             OptionParser(
@@ -95,6 +95,20 @@ def parse_doc(dir, file):
             doc,
         )
         return doc
+
+def run_parse_test(src_dir, expected_dir, output_dir, subdir, files):
+    src_dir = join(src_dir, subdir)
+    expected_dir = join(expected_dir, subdir)
+    output_dir = join(output_dir, subdir)
+    build_sphinx(src_dir, output_dir, files)
+
+    for file in files:
+        assert_doc_equal(
+            parse_doc(output_dir, file),
+            parse_doc(expected_dir, file),
+        )
+
+
 
 if __name__ == '__main__':
     pass

@@ -1,26 +1,13 @@
-from tests.utils import build_sphinx, assert_doc_equal, parse_doc
+from tests.utils import run_parse_test
 
 
-def test_external_hyperlinks(common_src_dir, expected_common_dir, output_dir):
-    build_sphinx(common_src_dir, output_dir, ['external-hyperlinks'])
+def test_hyperlink_targets(src_dir, expected_dir, output_dir):
+    run_parse_test(src_dir, expected_dir, output_dir, 'common', ['hyperlink-targets'])
 
-    assert_doc_equal(
-        parse_doc(output_dir, 'external-hyperlinks'),
-        parse_doc(expected_common_dir, 'external-hyperlinks'),
-    )
 
-def test_internal_hyperlinks(common_src_dir, expected_common_dir, output_dir):
-    build_sphinx(common_src_dir, output_dir, ['internal-hyperlinks'])
+def test_external_hyperlinks(src_dir, expected_dir, output_dir):
+    run_parse_test(src_dir, expected_dir, output_dir, 'common', ['external-hyperlinks'])
 
-    assert_doc_equal(
-        parse_doc(output_dir, 'internal-hyperlinks'),
-        parse_doc(expected_common_dir, 'internal-hyperlinks'),
-    )
 
-def test_hyperlink_targets(common_src_dir, expected_common_dir, output_dir):
-    build_sphinx(common_src_dir, output_dir, ['hyperlink-targets'])
-
-    assert_doc_equal(
-        parse_doc(output_dir, 'hyperlink-targets'),
-        parse_doc(expected_common_dir, 'hyperlink-targets'),
-    )
+def test_internal_hyperlinks(src_dir, expected_dir, output_dir):
+    run_parse_test(src_dir, expected_dir, output_dir, 'common', ['internal-hyperlinks'])
