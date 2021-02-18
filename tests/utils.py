@@ -60,25 +60,25 @@ def build_sphinx(src_dir, output_dir, files=None, config={}):
         app.build(force_all=force_all, filenames=filenames)
 
 
-def assert_node_equal(n1, n2):
-    assert type(n1) == type(n2)
-    if isinstance(n1, Text):
-        assert n1 == n2
-    elif isinstance(n1, Element):
-        assert len(n1.children) == len(n2.children)
-        assert n1.attributes == n2.attributes
+def assert_node_equal(output, expected):
+    assert type(output) == type(expected)
+    if isinstance(output, Text):
+        assert output == expected
+    elif isinstance(output, Element):
+        assert len(output.children) == len(expected.children)
+        assert output.attributes == expected.attributes
     else:
         raise AssertionError
 
 
-def assert_doc_equal(doc1, doc2):
+def assert_doc_equal(output_doc, expected_doc):
     """
     Can be used to compare two documents, ignoring any whitespace changes
     """
-    for n1, n2 in zip_longest(
-        doc1.traverse(include_self=False), doc2.traverse(include_self=False)
+    for output, expected in zip_longest(
+        output_doc.traverse(include_self=False), expected_doc.traverse(include_self=False)
     ):
-        assert_node_equal(n1, n2)
+        assert_node_equal(output, expected)
 
 
 def parse_doc(dir, file):
@@ -95,6 +95,7 @@ def parse_doc(dir, file):
             doc,
         )
         return doc
+
 
 def run_parse_test(src_dir, expected_dir, output_dir, subdir, files):
     src_dir = join(src_dir, subdir)
