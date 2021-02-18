@@ -613,15 +613,25 @@ class RstTranslator(TextTranslator):
         self.end_state()
 
     def visit_literal_block(self, node):
-        if node.get('language', 'default') != 'default':
-            directive = ".. code:: %s" % node['language']
-        elif node.get('highlight_args') is not None:
-            directive = ".. code::"
+        is_code_block = False
+        # Support for Sphinx < 2.0, which defines classes['code', 'language']
+        if 'code' in node.get('classes', []):
+            is_code_block = True
+            if node.get('language', 'default') == 'default' and len(node['classes']) >= 2:
+                node['language'] = node['classes'][1]
+        # highlight_args is the only way to distinguish between :: and .. code:: in Sphinx 2 or higher.
+        if node.get('highlight_args') != None:
+            is_code_block = True
+        if is_code_block:
+            if node.get('language', 'default') == 'default':
+                directive = ".. code::"
+            else:
+                directive = ".. code:: %s" % node['language']
+            if node.get('linenos'):
+                indent = self.indent * ' '
+                directive += "\n%s:number-lines:" % (indent)
         else:
             directive = "::"
-        if node.get('linenos'):
-            indent = self.indent * ' '
-            directive += "\n%s:number-lines:" % (indent)
         self.new_state(0)
         self.add_text(directive)
         self.end_state(wrap=False)
