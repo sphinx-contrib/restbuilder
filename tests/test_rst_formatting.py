@@ -1,46 +1,34 @@
-from tests.utils import build_sphinx, assert_doc_equal, parse_doc
+from tests.utils import run_parse_test
+
+import sphinx
 
 
-def test_bold(common_src_dir, expected_common_dir):
-    out_dir = build_sphinx(common_src_dir, ['bold'])
-
-    assert_doc_equal(
-        parse_doc(out_dir, 'bold'),
-        parse_doc(expected_common_dir, 'bold'),
-    )
+def test_bold(src_dir, expected_dir, output_dir):
+    run_parse_test(src_dir, expected_dir, output_dir, 'common', ['bold'])
 
 
-def test_italic(common_src_dir, expected_common_dir):
-    out_dir = build_sphinx(common_src_dir, ['italic'])
-
-    assert_doc_equal(
-        parse_doc(out_dir, 'italic'),
-        parse_doc(expected_common_dir, 'italic'),
-    )
+def test_italic(src_dir, expected_dir, output_dir):
+    run_parse_test(src_dir, expected_dir, output_dir, 'common', ['italic'])
 
 
-def test_literal(common_src_dir, expected_common_dir):
-    out_dir = build_sphinx(common_src_dir, ['literal'])
-
-    assert_doc_equal(
-        parse_doc(out_dir, 'literal'),
-        parse_doc(expected_common_dir, 'literal'),
-    )
+def test_literal(src_dir, expected_dir, output_dir):
+    run_parse_test(src_dir, expected_dir, output_dir, 'common', ['literal'])
 
 
-def test_subscript(common_src_dir, expected_common_dir):
-    out_dir = build_sphinx(common_src_dir, ['subscript'])
-
-    assert_doc_equal(
-        parse_doc(out_dir, 'subscript'),
-        parse_doc(expected_common_dir, 'subscript'),
-    )
+def test_subscript(src_dir, expected_dir, output_dir):
+    run_parse_test(src_dir, expected_dir, output_dir, 'common', ['subscript'])
 
 
-def test_superscript(common_src_dir, expected_common_dir):
-    out_dir = build_sphinx(common_src_dir, ['superscript'])
+def test_superscript(src_dir, expected_dir, output_dir):
+    run_parse_test(src_dir, expected_dir, output_dir, 'common', ['superscript'])
 
-    assert_doc_equal(
-        parse_doc(out_dir, 'superscript'),
-        parse_doc(expected_common_dir, 'superscript'),
-    )
+
+def test_smart_quotes(src_dir, expected_dir, output_dir):
+    # Smart quotes were only introduces in Sphinx 1.6
+    if sphinx.version_info >= (1, 6):
+        run_parse_test(src_dir, expected_dir, output_dir, 'common', ['smart-quotes'])
+    else:
+        # Support for Sphinx < 1.6
+        # no modification, test against src_dir instead of expected_dir
+        run_parse_test(src_dir, src_dir, output_dir, 'common', ['smart-quotes'])
+

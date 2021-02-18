@@ -1,32 +1,25 @@
-import os
+from os.path import dirname, realpath, join
+import shutil
 
 import pytest
 
 
 @pytest.fixture
-def common_src_dir():
-    return os.path.join(
-        os.path.dirname(os.path.realpath(__file__)), 'datasets', 'common'
+def src_dir():
+    return join(
+        dirname(realpath(__file__)), 'datasets'
     )
 
 
 @pytest.fixture
-def expected_common_dir():
-    return os.path.join(
-        os.path.dirname(os.path.realpath(__file__)), 'expected', 'common'
+def expected_dir():
+    return join(
+        dirname(realpath(__file__)), 'expected'
     )
 
 
-@pytest.fixture
-def sphinx_src_dir():
-    return os.path.join(
-        os.path.dirname(os.path.realpath(__file__)), 'datasets', 'sphinx-specific'
-    )
-
-
-@pytest.fixture
-def expected_sphinx_dir():
-    return os.path.join(
-        os.path.dirname(os.path.realpath(__file__)), 'expected', 'sphinx-specific'
-    )
-
+@pytest.fixture(scope="session")
+def output_dir():
+    out_dir = realpath(join(dirname(realpath(__file__)), '..', 'output'))
+    shutil.rmtree(out_dir, ignore_errors=True)
+    return out_dir

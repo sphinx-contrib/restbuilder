@@ -21,32 +21,6 @@ from sphinx.util.osutil import ensuredir, SEP
 from ..writers.rst import RstWriter
 
 
-# Clone of relative_uri() sphinx.util.osutil, with bug-fixes
-# since the original code had a few errors.
-# This was fixed in Sphinx 1.2b.
-def relative_uri(base, to):
-    """Return a relative URL from ``base`` to ``to``."""
-    if to.startswith(SEP):
-        return to
-    b2 = base.split(SEP)
-    t2 = to.split(SEP)
-    # remove common segments (except the last segment)
-    for x, y in zip(b2[:-1], t2[:-1]):
-        if x != y:
-            break
-        b2.pop(0)
-        t2.pop(0)
-    if b2 == t2:
-        # Special case: relative_uri('f/index.html','f/index.html')
-        # returns '', not 'index.html'
-        return ''
-    if len(b2) == 1 and t2 == ['']:
-        # Special case: relative_uri('f/index.html','f/') should
-        # return './', not ''
-        return '.' + SEP
-    return ('..' + SEP) * (len(b2)-1) + SEP.join(t2)
-
-
 class RstBuilder(Builder):
     name = 'rst'
     format = 'rst'
@@ -92,7 +66,7 @@ class RstBuilder(Builder):
             sourcename = path.join(self.env.srcdir, docname +
                                    self.file_suffix)
             targetname = path.join(self.outdir, self.file_transform(docname))
-            print (sourcename, targetname)
+            # print (sourcename, targetname)
 
             try:
                 targetmtime = path.getmtime(targetname)
@@ -108,15 +82,6 @@ class RstBuilder(Builder):
 
     def get_target_uri(self, docname, typ=None):
         return self.link_transform(docname)
-
-    def get_relative_uri(self, from_, to, typ=None):
-        """
-        Return a relative URI between two source filenames.
-        """
-        # This is slightly different from Builder.get_relative_uri,
-        # as it contains a small bug (which was fixed in Sphinx 1.2).
-        return relative_uri(self.get_target_uri(from_),
-                            self.get_target_uri(to, typ))
 
     def prepare_writing(self, docnames):
         self.writer = RstWriter(self)

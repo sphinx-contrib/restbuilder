@@ -63,7 +63,7 @@ class RstTranslator(TextTranslator):
             self.indent = self.builder.config.rst_indent
         else:
             self.indent = STDINDENT
-        self.wrapper = textwrap.TextWrapper(width=STDINDENT, break_long_words=False, break_on_hyphens=False)
+        self.wrapper = textwrap.TextWrapper(width=MAXWIDTH, break_long_words=False, break_on_hyphens=False)
 
     def log_unknown(self, type, node):
         logger = logging.getLogger("sphinxcontrib.writers.rst")
@@ -73,7 +73,7 @@ class RstTranslator(TextTranslator):
             logger = logging.getLogger("sphinxcontrib.writers.rst")
         logger.warning("%s(%s) unsupported formatting" % (type, node))
 
-    def wrap(self, text, width=STDINDENT):
+    def wrap(self, text, width=MAXWIDTH):
         self.wrapper.width = width
         return self.wrapper.wrap(text)
 
@@ -84,7 +84,7 @@ class RstTranslator(TextTranslator):
         self.stateindent.append(indent)
     def end_state(self, wrap=True, end=[''], first=None):
         content = self.states.pop()
-        maxindent = sum(self.stateindent)
+        width = max(MAXWIDTH//3, MAXWIDTH - sum(self.stateindent))
         indent = self.stateindent.pop()
         result = []
         toformat = []
@@ -92,7 +92,7 @@ class RstTranslator(TextTranslator):
             if not toformat:
                 return
             if wrap:
-                res = self.wrap(''.join(toformat), width=MAXWIDTH-maxindent)
+                res = self.wrap(''.join(toformat), width=width)
             else:
                 res = ''.join(toformat).splitlines()
             if end:
@@ -613,8 +613,30 @@ class RstTranslator(TextTranslator):
         self.end_state()
 
     def visit_literal_block(self, node):
-        self.add_text("::")
+        is_code_block = False
+        # Support for Sphinx < 2.0, which defines classes['code', 'language']
+        if 'code' in node.get('classes', []):
+            is_code_block = True
+            if node.get('language', 'default') == 'default' and len(node['classes']) >= 2:
+                node['language'] = node['classes'][1]
+        # highlight_args is the only way to distinguish between :: and .. code:: in Sphinx 2 or higher.
+        if node.get('highlight_args') != None:
+            is_code_block = True
+        if is_code_block:
+            if node.get('language', 'default') == 'default':
+                directive = ".. code::"
+            else:
+                directive = ".. code:: %s" % node['language']
+            if node.get('linenos'):
+                indent = self.indent * ' '
+                directive += "\n%s:number-lines:" % (indent)
+        else:
+            directive = "::"
+        self.new_state(0)
+        self.add_text(directive)
+        self.end_state(wrap=False)
         self.new_state(self.indent)
+
     def depart_literal_block(self, node):
         self.end_state(wrap=False)
 
@@ -635,7 +657,6 @@ class RstTranslator(TextTranslator):
         pass
 
     def visit_block_quote(self, node):
-        self.add_text('..')
         self.new_state(self.indent)
     def depart_block_quote(self, node):
         self.end_state()
@@ -657,7 +678,11 @@ class RstTranslator(TextTranslator):
     def visit_target(self, node):
         if 'refid' in node:
             self.new_state(0)
-            self.add_text('.. _'+node['refid']+':'+self.nl)
+            if node.get('ids'):
+                for id in node['ids']:
+                    self.add_text('.. _%s: %s_%s' % (id, node['refid'], self.nl))
+            else:
+                self.add_text('.. _'+node['refid']+':'+self.nl)
     def depart_target(self, node):
         if 'refid' in node:
             self.end_state(wrap=False)
@@ -707,14 +732,29 @@ class RstTranslator(TextTranslator):
         Finally, all other links are also converted to an inline link
         format.
         """
+        # if 'refuri' not in node and 'name' in node:
+        #     self.add_text('`%s`_' % node['name'])
+        #     raise nodes.SkipNode
         if 'name' not in node:
-            self.add_text('`%s`_' % node.astext())
-            raise nodes.SkipNode
+            if 'refuri' not in node:
+                self.add_text('`%s`_' % node.astext())
+                raise nodes.SkipNode
+            elif node.astext() == node['refuri']:
+                pass
+            else:
+                nodeuri = node['refuri']
+                if nodeuri.endswith('_'):
+                    nodeuri = nodeuri[:-1] + '\\_'
+                self.add_text('`%s <%s>`_' % (node.astext(), nodeuri))
+                raise nodes.SkipNode
         elif 'refuri' not in node:
             self.add_text('`%s`_' % node['name'])
             raise nodes.SkipNode
         elif 'internal' not in node:
-            self.add_text('`%s <%s>`_' % (node['name'], node['refuri']))
+            nodeuri = node['refuri']
+            if nodeuri.endswith('_'):
+                nodeuri = nodeuri[:-1] + '\\_'
+            self.add_text('`%s <%s>`_' % (node['name'], nodeuri))
             raise nodes.SkipNode
         elif 'reftitle' in node:
             # Include node as text, rather than with markup.
@@ -811,9 +851,9 @@ class RstTranslator(TextTranslator):
         pass
 
     def visit_problematic(self, node):
-        self.add_text('>>')
+        pass
     def depart_problematic(self, node):
-        self.add_text('<<')
+        pass
 
     def visit_system_message(self, node):
         self.new_state(0)

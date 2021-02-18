@@ -16,11 +16,11 @@ file from Sphinx_ and outputs it as reST.
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
 '''
 
-requires = ['Sphinx>=1.0']
+requires = ['Sphinx>=1.4']
 
 setup(
     name='sphinxcontrib-restbuilder',
-    version='0.2',
+    version='0.3',
     url='https://github.com/sphinx-contrib/restbuilder',
     download_url='http://pypi.python.org/pypi/sphinxcontrib-restbuilder',
     license='BSD 2-Clause',
@@ -36,12 +36,13 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
         'Topic :: Documentation :: Sphinx',
         'Topic :: Software Development :: Documentation',
-        'Topic :: Text Processing :: Markup',
+        'Topic :: Text Processing :: Markup :: reStructuredText',
     ],
     platforms='any',
+    python_requires='>=3.5',
     packages=find_packages(exclude=['tests']),
     include_package_data=True,
     install_requires=requires,

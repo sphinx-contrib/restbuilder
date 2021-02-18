@@ -1,5 +1,4 @@
-import os
-import shutil
+from os.path import join
 from itertools import zip_longest
 
 import docutils
@@ -7,6 +6,7 @@ from docutils.frontend import OptionParser
 from docutils.nodes import Text, Element
 from docutils.parsers.rst import Parser
 from docutils.utils import new_document
+from docutils.core import publish_from_doctree
 from sphinx.application import Sphinx
 
 # sphinx.util.docutils requires Sphinx 1.5 and up.
@@ -29,27 +29,29 @@ except ImportError:
             roles._roles = _roles
 
 
-def build_sphinx(src_dir, files=None):
-    out_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'output')
-    shutil.rmtree(out_dir, ignore_errors=True)
-
-    doctrees_dir = os.path.join(out_dir, '.doctrees')
+def build_sphinx(src_dir, output_dir, files=None, config={}):
+    doctrees_dir = join(output_dir, '.doctrees')
 
     filenames = []
     force_all = True
 
-    config = {'extensions': ['sphinxcontrib.restbuilder']}
+    default_config = {
+        'extensions': ['sphinxcontrib.restbuilder'],
+        'master_doc': 'index',
+    }
+    default_config.update(config)
+    config = default_config
 
     if files:
         force_all = False
-        filenames = [os.path.join(src_dir, file + '.rst') for file in files]
+        filenames = [join(src_dir, file + '.rst') for file in files]
         config['master_doc'] = files[0]
 
     with docutils_namespace():
         app = Sphinx(
             src_dir,
             None,
-            out_dir,
+            output_dir,
             doctrees_dir,
             'rst',
             confoverrides=config,
@@ -57,33 +59,32 @@ def build_sphinx(src_dir, files=None):
         )
 
         app.build(force_all=force_all, filenames=filenames)
-    return out_dir
 
 
-def assert_node_equal(n1, n2):
-    assert type(n1) == type(n2)
-    if isinstance(n1, Text):
-        assert n1 == n2
-    elif isinstance(n1, Element):
-        assert len(n1.children) == len(n2.children)
-        assert n1.attributes == n2.attributes
+def assert_node_equal(output, expected):
+    assert type(output) == type(expected)
+    if isinstance(output, Text):
+        assert output == expected
+    elif isinstance(output, Element):
+        assert len(output.children) == len(expected.children)
+        assert output.attributes == expected.attributes
     else:
         raise AssertionError
 
 
-def assert_doc_equal(doc1, doc2):
+def assert_doc_equal(output_doc, expected_doc):
     """
     Can be used to compare two documents, ignoring any whitespace changes
     """
-    for n1, n2 in zip_longest(
-        doc1.traverse(include_self=False), doc2.traverse(include_self=False)
+    for output, expected in zip_longest(
+        output_doc.traverse(include_self=False), expected_doc.traverse(include_self=False)
     ):
-        assert_node_equal(n1, n2)
+        assert_node_equal(output, expected)
 
 
 def parse_doc(dir, file):
     parser = Parser()
-    with open(os.path.join(dir, file + '.rst')) as fh:
+    with open(join(dir, file + '.rst')) as fh:
         doc = new_document(
             file,
             OptionParser(
@@ -95,6 +96,28 @@ def parse_doc(dir, file):
             doc,
         )
         return doc
+
+
+def run_parse_test(src_dir, expected_dir, output_dir, subdir, files):
+    src_dir = join(src_dir, subdir)
+    expected_dir = join(expected_dir, subdir)
+    output_dir = join(output_dir, subdir)
+    build_sphinx(src_dir, output_dir, files)
+
+    for file in files:
+        output_doc = parse_doc(output_dir, file)
+        expected_doc = parse_doc(expected_dir, file)
+        try:
+            assert_doc_equal(output_doc, expected_doc)
+        except AssertionError:
+            # output XML version of doctree for easier debugging
+            with open(join(output_dir, file + '.output.xml'), 'wb') as fw:
+                fw.write(publish_from_doctree(output_doc, writer_name='xml'))
+            with open(join(output_dir, file + '.expected.xml'), 'wb') as fw:
+                fw.write(publish_from_doctree(expected_doc, writer_name='xml'))
+            raise
+
+
 
 if __name__ == '__main__':
     pass
