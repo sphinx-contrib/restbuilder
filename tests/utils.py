@@ -6,6 +6,7 @@ from docutils.frontend import OptionParser
 from docutils.nodes import Text, Element
 from docutils.parsers.rst import Parser
 from docutils.utils import new_document
+from docutils.core import publish_from_doctree
 from sphinx.application import Sphinx
 
 # sphinx.util.docutils requires Sphinx 1.5 and up.
@@ -104,10 +105,17 @@ def run_parse_test(src_dir, expected_dir, output_dir, subdir, files):
     build_sphinx(src_dir, output_dir, files)
 
     for file in files:
-        assert_doc_equal(
-            parse_doc(output_dir, file),
-            parse_doc(expected_dir, file),
-        )
+        output_doc = parse_doc(output_dir, file)
+        expected_doc = parse_doc(expected_dir, file)
+        try:
+            assert_doc_equal(output_doc, expected_doc)
+        except AssertionError:
+            # output XML version of doctree for easier debugging
+            with open(join(output_dir, file + '.output.xml'), 'wb') as fw:
+                fw.write(publish_from_doctree(output_doc, writer_name='xml'))
+            with open(join(output_dir, file + '.expected.xml'), 'wb') as fw:
+                fw.write(publish_from_doctree(expected_doc, writer_name='xml'))
+            raise
 
 
 
