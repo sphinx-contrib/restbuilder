@@ -704,6 +704,11 @@ class RstTranslator(TextTranslator):
         refbody = node.astext()
         refuri = node.get('refuri')
         refid = node.get('refid')
+        if node.get('anonymous'):
+            underscore = '__'
+        else:
+            underscore = '_'
+
         if refuri and refuri.endswith('_'):
             refuri = refuri[:-1] + '\\_'
 
