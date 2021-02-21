@@ -1,8 +1,20 @@
-Title
-*****
+Headline
+========
+Text immediately following.
 
-Section
-=======
+Subheader
+---------
 
-Subsection
-----------
+Blank line before paragraph.
+
+Another paragraph.
+
+Subsubheader
+____________
+
+Subheader 2
+-----------
+
+Another Chapter
+===============
+End of file.
