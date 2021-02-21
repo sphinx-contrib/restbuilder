@@ -7,9 +7,8 @@ The hyperlink target above points to this paragraph.
 
 Pointer to a nonexisting_ target.
 
-
 Titles are targets, too
-***********************
+=======================
 
 Implict references, even with spaces, like `Titles are targets, too`_.
 

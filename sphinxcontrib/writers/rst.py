@@ -629,7 +629,7 @@ class RstTranslator(TextTranslator):
                 directive = ".. code:: %s" % node['language']
             if node.get('linenos'):
                 indent = self.indent * ' '
-                directive += "\n%s:number-lines:" % (indent)
+                directive += "%s%s:number-lines:" % (self.nl, indent)
         else:
             directive = "::"
         self.new_state(0)
@@ -679,10 +679,11 @@ class RstTranslator(TextTranslator):
         if 'refid' in node:
             self.new_state(0)
             if node.get('ids'):
-                for id in node['ids']:
-                    self.add_text('.. _%s: %s_%s' % (id, node['refid'], self.nl))
+                self.add_text(self.nl.join(
+                    '.. _%s: %s_' % (id, node['refid']) for id in node['ids']
+                ))
             else:
-                self.add_text('.. _'+node['refid']+':'+self.nl)
+                self.add_text('.. _'+node['refid']+':')
     def depart_target(self, node):
         if 'refid' in node:
             self.end_state(wrap=False)
@@ -699,81 +700,38 @@ class RstTranslator(TextTranslator):
         pass
 
     def visit_reference(self, node):
-        """Run upon entering a reference
-
-        Because this class inherits from the TextTranslator class,
-        regularly defined links, such as::
-
-            `Some Text`_
-
-            .. _Some Text: http://www.some_url.com
-
-        were being written as plaintext. This included internal
-        references defined in the standard rst way, such as::
-
-            `Some Reference`
-
-            .. _Some Reference:
-
-            Some Title
-            ----------
-
-        To resolve this, if ``refuri`` is not included in the node (an
-        internal, non-Sphinx-defined internal uri, the reference is
-        left unchanged (e.g. ```Some Text`_`` is written as such).
-
-        If ``internal`` is not in the node (as for an external,
-        non-Sphinx URI, the reference is rewritten as an inline link,
-        e.g. ```Some Text <http://www.some_url.com>`_``.
-
-        If ``reftitle` is in the node (as in a Sphinx-generated
-        reference), the node is converted to an inline link.
-
-        Finally, all other links are also converted to an inline link
-        format.
-        """
-        # if 'refuri' not in node and 'name' in node:
-        #     self.add_text('`%s`_' % node['name'])
-        #     raise nodes.SkipNode
-        if 'name' not in node:
-            if 'refuri' not in node:
-                self.add_text('`%s`_' % node.astext())
-                raise nodes.SkipNode
-            elif node.astext() == node['refuri']:
-                pass
-            else:
-                nodeuri = node['refuri']
-                if nodeuri.endswith('_'):
-                    nodeuri = nodeuri[:-1] + '\\_'
-                self.add_text('`%s <%s>`_' % (node.astext(), nodeuri))
-                raise nodes.SkipNode
-        elif 'refuri' not in node:
-            self.add_text('`%s`_' % node['name'])
-            raise nodes.SkipNode
-        elif 'internal' not in node:
-            nodeuri = node['refuri']
-            if nodeuri.endswith('_'):
-                nodeuri = nodeuri[:-1] + '\\_'
-            self.add_text('`%s <%s>`_' % (node['name'], nodeuri))
-            raise nodes.SkipNode
-        elif 'reftitle' in node:
-            # Include node as text, rather than with markup.
-            # reST seems unable to parse a construct like ` ``literal`` <url>`_
-            # Hence we revert to the more simple `literal <url>`_
-            self.add_text('`%s <%s>`_' % (node.astext(), node['refuri']))
-            # self.end_state(wrap=False)
-            raise nodes.SkipNode
+        refname = node.get('name')
+        refbody = node.astext()
+        refuri = node.get('refuri')
+        refid = node.get('refid')
+        if node.get('anonymous'):
+            underscore = '__'
         else:
-            self.add_text('`%s <%s>`_' % (node.astext(), node['refuri']))
-            raise nodes.SkipNode
+            underscore = '_'
+
+        if refuri and refuri.endswith('_'):
+            refuri = refuri[:-1] + '\\_'
+
+        if node.get('internal'):
+            if refuri:
+                self.add_text('`%s <%s>`%s' % (refbody, refuri, underscore))
+            elif refid:
+                self.add_text('`%s <#%s>`%s' % (refbody, refid, underscore))
+            else:
+                return
+        else:
+            if refuri and refname:
+                self.add_text('`%s <%s>`%s' % (refname, refuri, underscore))
+            elif refuri:
+                self.add_text('%s' % (refuri))
+            elif refname:
+                self.add_text('`%s`%s' % (refname, underscore))
+            else:
+                return
+        raise nodes.SkipNode
 
     def depart_reference(self, node):
-        if 'refuri' not in node:
-            pass # Don't add these anchors
-        elif 'internal' not in node:
-            pass # Don't add external links (they are automatically added by the reST spec)
-        elif 'reftitle' in node:
-            pass
+        pass
 
     def visit_download_reference(self, node):
         self.log_unknown("download_reference", node)

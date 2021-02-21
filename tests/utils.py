@@ -3,7 +3,7 @@ from itertools import zip_longest
 
 import docutils
 from docutils.frontend import OptionParser
-from docutils.nodes import Text, Element
+from docutils.nodes import Text, Element, system_message
 from docutils.parsers.rst import Parser
 from docutils.utils import new_document
 from docutils.core import publish_from_doctree
@@ -65,6 +65,10 @@ def assert_node_equal(output, expected):
     assert type(output) == type(expected)
     if isinstance(output, Text):
         assert output == expected
+    elif isinstance(output, system_message):
+        assert len(output.children) == len(expected.children)
+        # Don't check specifics of system_messages (warnings)
+        # E.g. the line number may be off
     elif isinstance(output, Element):
         assert len(output.children) == len(expected.children)
         assert output.attributes == expected.attributes

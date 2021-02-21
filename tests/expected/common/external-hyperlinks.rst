@@ -8,6 +8,6 @@ Indirect external hyperlinks, like `Larch
 `Write to me <mailto:jdoe@example.com>`_ with your questions.
 
 Anonymous hyperlinks, like `the web site of my favorite programming
-language <http://www.python.org>`_.
+language <http://www.python.org>`__.
 
 Direct hyperlinks, like http://www.python.org.
