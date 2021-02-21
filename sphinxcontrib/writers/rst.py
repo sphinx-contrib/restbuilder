@@ -629,7 +629,7 @@ class RstTranslator(TextTranslator):
                 directive = ".. code:: %s" % node['language']
             if node.get('linenos'):
                 indent = self.indent * ' '
-                directive += "\n%s:number-lines:" % (indent)
+                directive += "%s%s:number-lines:" % (self.nl, indent)
         else:
             directive = "::"
         self.new_state(0)
@@ -679,10 +679,11 @@ class RstTranslator(TextTranslator):
         if 'refid' in node:
             self.new_state(0)
             if node.get('ids'):
-                for id in node['ids']:
-                    self.add_text('.. _%s: %s_%s' % (id, node['refid'], self.nl))
+                self.add_text(self.nl.join(
+                    '.. _%s: %s_' % (id, node['refid']) for id in node['ids']
+                ))
             else:
-                self.add_text('.. _'+node['refid']+':'+self.nl)
+                self.add_text('.. _'+node['refid']+':')
     def depart_target(self, node):
         if 'refid' in node:
             self.end_state(wrap=False)
