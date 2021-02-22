@@ -9,7 +9,7 @@ on:
     - master
 
 jobs:
-  build:
+  build_and_test:
     runs-on: ubuntu-latest
     strategy:
       # If you change the test matrix, also change it in tox.ini
@@ -43,7 +43,7 @@ jobs:
           # Sphinx 4.0 dropped support for Python 3.5
           - sphinx: 4.0
             python: 3.5
-
+    name: Python ${{ matrix.python }} - Sphinx ${{ matrix.sphinx }}
     steps:
     - name: Checkout latest commit
       uses: actions/checkout@v2
