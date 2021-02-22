@@ -64,7 +64,11 @@ def build_sphinx(src_dir, output_dir, files=None, config={}):
 def assert_node_equal(output, expected):
     assert type(output) == type(expected)
     if isinstance(output, Text):
-        assert output == expected
+        output_text = output.replace('\r\n', ' ')
+        output_text = output_text.replace('\n', ' ')
+        expected_text = expected.replace('\r\n', ' ')
+        expected_text = expected_text.replace('\n', ' ')
+        assert output_text == expected_text
     elif isinstance(output, system_message):
         assert len(output.children) == len(expected.children)
         # Don't check specifics of system_messages (warnings)
