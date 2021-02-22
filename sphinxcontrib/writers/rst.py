@@ -486,11 +486,6 @@ class RstTranslator(TextTranslator):
     def depart_enumerated_list(self, node):
         self.list_counter.pop()
 
-    def visit_definition_list(self, node):
-        self.list_counter.append(-2)
-    def depart_definition_list(self, node):
-        self.list_counter.pop()
-
     def visit_list_item(self, node):
         if self.list_counter[-1] == -1:
             # bullet list
@@ -509,6 +504,11 @@ class RstTranslator(TextTranslator):
             pass
         else:
             self.end_state(first='%s. ' % self.list_counter[-1], end=None)
+
+    def visit_definition_list(self, node):
+        pass
+    def depart_definition_list(self, node):
+        pass
 
     def visit_definition_list_item(self, node):
         self._li_has_classifier = len(node) >= 2 and \
