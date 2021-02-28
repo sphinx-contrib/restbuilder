@@ -57,6 +57,7 @@ class RstTranslator(TextTranslator):
         self.states = [[]]
         self.stateindent = [0]
         self.list_counter = []
+        self.list_formatter = []
         self.sectionlevel = 0
         self.table = None
         if self.builder.config.rst_indent:
@@ -477,33 +478,35 @@ class RstTranslator(TextTranslator):
         raise nodes.SkipNode
 
     def visit_bullet_list(self, node):
-        self.list_counter.append(-1)
+        def bullet_list_format(counter):
+            return '*'
+        self.list_counter.append(-1)  # TODO: just 0 is fine.
+        self.list_formatter.append(bullet_list_format)
     def depart_bullet_list(self, node):
         self.list_counter.pop()
+        self.list_formatter.pop()
 
     def visit_enumerated_list(self, node):
+        def enumerated_list_format(counter):
+            return str(counter) + '.'
         self.list_counter.append(0)
+        self.list_formatter.append(enumerated_list_format)
     def depart_enumerated_list(self, node):
         self.list_counter.pop()
+        self.list_formatter.pop()
 
     def visit_list_item(self, node):
-        if self.list_counter[-1] == -1:
-            # bullet list
-            self.new_state(self.indent)
-        elif self.list_counter[-1] == -2:
-            # definition list
-            pass
-        else:
-            # enumerated list
-            self.list_counter[-1] += 1
-            self.new_state(len(str(self.list_counter[-1])) + self.indent)
+        self.list_counter[-1] += 1
+        bullet_formatter = self.list_formatter[-1]
+        bullet = bullet_formatter(self.list_counter[-1])
+        indent = max(self.indent, len(bullet) + 1)
+        self.new_state(indent)
     def depart_list_item(self, node):
-        if self.list_counter[-1] == -1:
-            self.end_state(first='* ', end=None)
-        elif self.list_counter[-1] == -2:
-            pass
-        else:
-            self.end_state(first='%s. ' % self.list_counter[-1], end=None)
+        # formatting to make the string `self.stateindent[-1]` chars long.
+        format = '%%-%ds' % (self.stateindent[-1])
+        bullet_formatter = self.list_formatter[-1]
+        bullet = format % bullet_formatter(self.list_counter[-1])
+        self.end_state(first=bullet, end=None)
 
     def visit_definition_list(self, node):
         pass
