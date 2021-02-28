@@ -1,3 +1,5 @@
+:orphan:
+
 .. list-table::
     :header-rows: 1
 

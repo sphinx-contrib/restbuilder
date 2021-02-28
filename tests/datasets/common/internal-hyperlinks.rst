@@ -1,11 +1,11 @@
+:orphan:
+
 Clicking on this internal hyperlink will take us to the target_
 below.
 
 .. _target:
 
 The hyperlink target above points to this paragraph.
-
-Pointer to a nonexisting_ target.
 
 Titles are targets, too
 =======================

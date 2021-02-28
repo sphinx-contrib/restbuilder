@@ -1,3 +1,5 @@
+:orphan:
+
 Embedded external hyperlinks, like `Python
 <https://www.python.org/>`_.
 

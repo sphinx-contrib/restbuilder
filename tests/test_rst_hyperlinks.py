@@ -13,6 +13,10 @@ def test_internal_hyperlinks(src_dir, expected_dir, output_dir):
     run_parse_test(src_dir, expected_dir, output_dir, 'common', ['internal-hyperlinks'])
 
 
+def test_nonexisting_target(src_dir, expected_dir, output_dir):
+    run_parse_test(src_dir, expected_dir, output_dir, 'common', ['nonexistent-target'])
+
+
 def test_ref(src_dir, expected_dir, output_dir):
     run_parse_test(src_dir, expected_dir, output_dir, 'sphinx-roles', ['ref'])
 

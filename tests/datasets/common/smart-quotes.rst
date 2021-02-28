@@ -1,3 +1,5 @@
+:orphan:
+
 This is a line with a quote, isn't it?
 
 This is a line with a smart quote, isn’t it?

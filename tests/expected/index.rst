@@ -1,4 +1,4 @@
-This folder contains test sources.
+This folder contains expected test results.
 
 It is catagorized in directories:
 

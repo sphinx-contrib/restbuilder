@@ -5,8 +5,6 @@ below.
 
 The hyperlink target above points to this paragraph.
 
-Pointer to a nonexisting_ target.
-
 Titles are targets, too
 =======================
 

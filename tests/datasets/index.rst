@@ -1,4 +1,6 @@
-This folder contains expected test results.
+:orphan:
+
+This folder contains test sources.
 
 It is catagorized in directories:
 

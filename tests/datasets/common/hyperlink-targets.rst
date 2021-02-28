@@ -1,3 +1,5 @@
+:orphan:
+
 .. _target:
 
 The hyperlink target above points to this paragraph.
