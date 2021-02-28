@@ -5,9 +5,9 @@
 
     Sphinx extension to output reST files.
 
-    .. moduleauthor:: Freek Dijkstra <software@macfreek.nl>
+    .. moduleauthor:: Freek Dijkstra <freek@macfreek.nl>
 
-    :copyright: Copyright 2012-2013 by Freek Dijkstra.
+    :copyright: Copyright 2012-2021 by Freek Dijkstra and contributors.
     :license: BSD, see LICENSE.txt for details.
 """
 

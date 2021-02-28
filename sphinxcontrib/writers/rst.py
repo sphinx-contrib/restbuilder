@@ -5,7 +5,7 @@
 
     Custom docutils writer for ReStructuredText.
 
-    :copyright: Copyright 2012-2013 by Freek Dijkstra.
+    :copyright: Copyright 2012-2021 by Freek Dijkstra and contributors.
     :license: BSD, see LICENSE.txt for details.
 """
 
