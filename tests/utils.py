@@ -1,5 +1,10 @@
 from os.path import join
-from itertools import zip_longest
+try:
+    from itertools import zip_longest
+except ImportError:
+    # Python 2.7 support.
+    from itertools import izip_longest as zip_longest
+import io
 
 import docutils
 from docutils.frontend import OptionParser
@@ -92,7 +97,7 @@ def assert_doc_equal(output_doc, expected_doc):
 
 def parse_doc(dir, file):
     parser = Parser()
-    with open(join(dir, file + '.rst')) as fh:
+    with io.open(join(dir, file + '.rst'), encoding='utf-8') as fh:
         doc = new_document(
             file,
             OptionParser(
