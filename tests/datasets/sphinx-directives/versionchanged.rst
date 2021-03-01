@@ -1,3 +1,5 @@
+:orphan:
+
 .. versionchanged:: 0.3.1
 
 .. versionchanged:: 2.5.0

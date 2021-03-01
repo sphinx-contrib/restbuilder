@@ -1,3 +1,5 @@
+:orphan:
+
 .. deprecated:: 0.3.1
 
 .. deprecated:: 2.5.0

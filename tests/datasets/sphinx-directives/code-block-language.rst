@@ -1,3 +1,5 @@
+:orphan:
+
 Some Python Code:
 
 .. code-block:: python

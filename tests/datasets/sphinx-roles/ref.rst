@@ -1,3 +1,5 @@
+:orphan:
+
 Read more in :ref:`section-w2zn7enu`.
 
 .. _section-w2zn7enu:

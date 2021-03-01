@@ -1,3 +1,5 @@
+:orphan:
+
 .. code:: python
 
    def foo():

@@ -1,3 +1,5 @@
+:orphan:
+
 .. code-block::
 
    def foo():
