@@ -1,4 +1,5 @@
 from os.path import join
+import os
 try:
     from itertools import zip_longest
 except ImportError:
@@ -97,6 +98,8 @@ def assert_doc_equal(output_doc, expected_doc):
 
 def parse_doc(dir, file):
     parser = Parser()
+    wd = os.getcwd()
+    os.chdir(dir)
     with io.open(join(dir, file + '.rst'), encoding='utf-8') as fh:
         doc = new_document(
             file,
@@ -108,7 +111,8 @@ def parse_doc(dir, file):
             fh.read(),
             doc,
         )
-        return doc
+    os.chdir(wd)
+    return doc
 
 
 def run_parse_test(src_dir, expected_dir, output_dir, subdir, files):
