@@ -7,6 +7,8 @@
 
     :copyright: Copyright 2012-2021 by Freek Dijkstra and contributors.
     :license: BSD, see LICENSE.txt for details.
+
+    Based on sphinx.writers.text.TextWriter, copyright 2007-2014 by the Sphinx team.
 """
 
 from __future__ import (print_function, unicode_literals, absolute_import)
@@ -20,7 +22,8 @@ from docutils import nodes, writers
 
 from sphinx import addnodes
 from sphinx.locale import admonitionlabels, _
-from sphinx.writers.text import TextTranslator, MAXWIDTH, STDINDENT
+from sphinx.writers.text import MAXWIDTH, STDINDENT
+
 
 
 class RstWriter(writers.Writer):
@@ -40,11 +43,14 @@ class RstWriter(writers.Writer):
         self.output = visitor.body
 
 
-class RstTranslator(TextTranslator):
+class RstTranslator(nodes.NodeVisitor):
     sectionchars = '*=-~"+`'
 
     def __init__(self, document, builder):
-        TextTranslator.__init__(self, document, builder)
+        nodes.NodeVisitor.__init__(self, document)
+
+        self.document = document
+        self.builder = builder
 
         newlines = builder.config.text_newlines
         if newlines == 'windows':
@@ -806,7 +812,6 @@ class RstTranslator(TextTranslator):
         pass
 
     def visit_inline(self, node):
-        # self.log_unknown("inline", node)
         pass
     def depart_inline(self, node):
         pass
@@ -834,5 +839,10 @@ class RstTranslator(TextTranslator):
             self.body.append(node.astext())
         raise nodes.SkipNode
 
+    def visit_docinfo(self, node):
+        raise nodes.SkipNode
+
     def unknown_visit(self, node):
         raise NotImplementedError('Unknown node: ' + node.__class__.__name__)
+
+    default_visit = unknown_visit
