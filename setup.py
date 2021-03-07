@@ -3,14 +3,14 @@
 from setuptools import setup, find_packages
 
 long_desc = '''
-Sphinx_ extension to build reST (reStructuredText_) files.
+Sphinx_ extension to build and write reStructuredText_ (reST / rst) files.
 
 This extension is in particular useful to use in combination with the autodoc
 extension to automatically generate documentation for use by any rst parser
-(such as the GitHub wiki).
+(such as the GitHub wiki, which does not support the advanced Sphinx directives).
 
-In itself, the extension is fairly straightforward -- it takes the parsed reST 
-file from Sphinx_ and outputs it as reST.
+In itself, the extension is fairly straightforward -- it takes the parsed
+reStructuredText file from Sphinx_ and outputs it as reStructuredText.
 
 .. _Sphinx: http://sphinx-doc.org/
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html

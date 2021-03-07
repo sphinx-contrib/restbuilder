@@ -10,7 +10,7 @@ This extension is in particular useful to use in combination with the autodoc
 extension to automatically generate documentation for use by any rst parser
 (such as the GitHub wiki).
 
-In itself, the extension is fairly straightforward -- it takes the parsed reST 
+In itself, the extension is fairly straightforward -- it takes the parsed reST
 file from Sphinx_ and outputs it as reST.
 
 Requirements
