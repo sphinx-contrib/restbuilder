@@ -21,7 +21,7 @@ from .writers.rst import RstWriter
 
 
 def setup(app):
-    app.require_sphinx('1.0')
+    app.require_sphinx('1.4')
     app.add_builder(RstBuilder)
     app.add_config_value('rst_file_suffix', ".rst", False)
     """This is the file name suffix for reST files"""

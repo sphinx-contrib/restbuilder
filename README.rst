@@ -16,8 +16,11 @@ file from Sphinx_ and outputs it as reST.
 Requirements
 ============
 
-* Sphinx_ 1.4 or later
-* Python 3.5 or later
+* Sphinx_ 2.0
+* Python 3.5
+
+Sphinx 1.4 - 1.8 and Python 2.7 are partly supported. It does work, but some
+markup may not parse correctly.
 
 Installing
 ==========

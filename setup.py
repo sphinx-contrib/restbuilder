@@ -16,7 +16,7 @@ file from Sphinx_ and outputs it as reST.
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
 '''
 
-requires = ['Sphinx>=1.4']
+requires = ['Sphinx>=1.4', 'docutils']
 
 setup(
     name='sphinxcontrib-restbuilder',
