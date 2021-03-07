@@ -14,6 +14,11 @@ targets, too`_.
 
 Untitled references target_ and `target`_ should be the same.
 
-This link_ refers to a file called ``underscore_``.
+.. _named-section:
 
-.. _link: underscore\_
+Names Links
+===========
+
+`Link to target <target_>`_
+
+`Link to named sections <named-section_>`_

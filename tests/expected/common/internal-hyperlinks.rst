@@ -1,4 +1,4 @@
-Clicking on this internal hyperlink will take us to the `target`_
+Clicking on this internal hyperlink will take us to the target_
 below.
 
 .. _target:
@@ -7,9 +7,16 @@ The hyperlink target above points to this paragraph.
 
 Titles are targets, too
 =======================
+Implict references, even with spaces, like `Titles are
+targets, too`_.
 
-Implict references, even with spaces, like `Titles are targets, too`_.
+Untitled references target_ and `target`_ should be the same.
 
-Untitled references `target`_ and `target`_ should be the same.
+.. _named-section:
 
-This `link <underscore\_>`_ refers to a file called ``underscore_``.
+Names Links
+===========
+
+`Link to target <target_>`_
+
+`Link to named sections <named-section_>`_

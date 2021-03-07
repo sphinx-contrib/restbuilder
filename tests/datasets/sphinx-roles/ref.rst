@@ -2,6 +2,8 @@
 
 Read more in :ref:`section-w2zn7enu`.
 
+This should link to `Section Title <section-w2zn7enu_>`_.
+
 .. _section-w2zn7enu:
 
 Section Title

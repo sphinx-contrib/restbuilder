@@ -19,11 +19,17 @@ import textwrap
 import logging
 
 from docutils import nodes, writers
+from docutils.nodes import fully_normalize_name
 
 from sphinx import addnodes
 from sphinx.locale import admonitionlabels, _
 from sphinx.writers.text import MAXWIDTH, STDINDENT
 
+
+def escape_uri(uri):
+    if uri.endswith('_'):
+        uri = uri[:-1] + '\\_'
+    return uri
 
 
 class RstWriter(writers.Writer):
@@ -466,7 +472,7 @@ class RstTranslator(nodes.NodeVisitor):
     def visit_image(self, node):
         self.new_state(0)
         if 'uri' in node:
-            self.add_text(_('.. image:: %s') % node['uri'])
+            self.add_text(_('.. image:: %s') % escape_uri(node['uri']))
         elif 'target' in node.attributes:
             self.add_text(_('.. image: %s') % node['target'])
         elif 'alt' in node.attributes:
@@ -685,17 +691,23 @@ class RstTranslator(nodes.NodeVisitor):
             self.end_state()
 
     def visit_target(self, node):
-        if 'refid' in node:
+        is_inline = node.parent.tagname in ('paragraph',)
+        if is_inline or node.get('anonymous'):
+            return
+        refid = node.get('refid')
+        refuri = node.get('refuri')
+        if refid:
             self.new_state(0)
             if node.get('ids'):
                 self.add_text(self.nl.join(
-                    '.. _%s: %s_' % (id, node['refid']) for id in node['ids']
+                    '.. _%s: %s_' % (id, refid) for id in node['ids']
                 ))
             else:
                 self.add_text('.. _'+node['refid']+':')
-    def depart_target(self, node):
-        if 'refid' in node:
             self.end_state(wrap=False)
+        raise nodes.SkipNode
+    def depart_target(self, node):
+        pass
 
     def visit_index(self, node):
         raise nodes.SkipNode
@@ -717,27 +729,21 @@ class RstTranslator(nodes.NodeVisitor):
             underscore = '__'
         else:
             underscore = '_'
+        if not refname:
+            refname = refbody
 
-        if refuri and refuri.endswith('_'):
-            refuri = refuri[:-1] + '\\_'
-
-        if node.get('internal'):
-            if refuri:
-                self.add_text('`%s <%s>`%s' % (refbody, refuri, underscore))
-            elif refid:
-                self.add_text('`%s <#%s>`%s' % (refbody, refid, underscore))
-            else:
-                return
-        else:
-            if refuri and refname:
-                self.add_text('`%s <%s>`%s' % (refname, refuri, underscore))
-            elif refuri:
-                self.add_text('%s' % (refuri))
-            elif refname:
+        if refid:
+            if refid == self.document.nameids.get(fully_normalize_name(refname)):
                 self.add_text('`%s`%s' % (refname, underscore))
             else:
-                return
-        raise nodes.SkipNode
+                self.add_text('`%s <%s_>`%s' % (refname, refid, underscore))
+            raise nodes.SkipNode
+        elif refuri:
+            if refuri == refname:
+                self.add_text(escape_uri(refuri))
+            else:
+                self.add_text('`%s <%s>`%s' % (refname, escape_uri(refuri), underscore))
+            raise nodes.SkipNode
 
     def depart_reference(self, node):
         pass

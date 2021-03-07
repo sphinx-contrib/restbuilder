@@ -8,11 +8,11 @@ Internal hyperlink targets may be chained. Multiple adjacent internal hyperlink 
 .. _target1:
 .. _target2:
 
-The targets target1 and target2 are synonyms; they both
+The targets target1_ and target2_ are synonyms; they both
 point to this paragraph.
 
 .. _one: two_
 .. _two: three_
 .. _three:
 
-Indirect hyperlink targets have a hyperlink reference in their link blocks. In the following example, target one indirectly references whatever target two references, and target two references target three, an internal hyperlink target. In effect, all three reference the same thing.
+Indirect hyperlink targets have a hyperlink reference in their link blocks. In the following example, target one_ indirectly references whatever target two_ references, and target two references target three_, an internal hyperlink target. In effect, all three reference the same thing.

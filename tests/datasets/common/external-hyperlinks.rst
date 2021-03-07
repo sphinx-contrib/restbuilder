@@ -15,3 +15,7 @@ Anonymous hyperlinks, like `the web site of my favorite programming language`__.
 .. __: http://www.python.org
 
 Direct hyperlinks, like http://www.python.org.
+
+This link_ refers to a file called ``underscore_``.
+
+.. _link: underscore\_
