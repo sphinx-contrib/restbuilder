@@ -2,6 +2,24 @@
 
 from setuptools import setup, find_packages
 
+def get_restbuilder_version():
+    # load sphinxcontrib.restbuilder from local path.
+    # (Lots of work, just to get the version info)
+    from os.path import join, dirname
+    import sys
+    restbuilder_path = join(dirname(__file__), 'sphinxcontrib', 'restbuilder.py')
+    if sys.version_info >= (3, 5):
+        # requires Python 3.5 or up.
+        import importlib.util
+        spec = importlib.util.spec_from_file_location('sphinxcontrib.restbuilder', restbuilder_path)
+        restbuilder = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(restbuilder)
+    else:
+        # Python 2.7 support
+        import imp
+        restbuilder = imp.load_source('sphinxcontrib.restbuilder', restbuilder_path)
+    return restbuilder.__version__
+
 long_desc = '''
 Sphinx_ extension to build and write reStructuredText_ (reST / rst) files.
 
@@ -20,7 +38,7 @@ requires = ['Sphinx>=1.4', 'docutils']
 
 setup(
     name='sphinxcontrib-restbuilder',
-    version='0.3',
+    version=get_restbuilder_version(),
     url='https://github.com/sphinx-contrib/restbuilder',
     download_url='http://pypi.python.org/pypi/sphinxcontrib-restbuilder',
     license='BSD 2-Clause',
