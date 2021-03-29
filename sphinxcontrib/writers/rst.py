@@ -808,6 +808,13 @@ class RstTranslator(nodes.NodeVisitor):
         self.add_text('[%s]' % node.astext())
         raise nodes.SkipNode
 
+    def visit_math_block(self, node):
+        self.add_text(".. math::")
+        self.new_state(self.indent)
+
+    def depart_math_block(self, node):
+        self.end_state(wrap=False)
+
     def visit_Text(self, node):
         self.add_text(node.astext())
     def depart_Text(self, node):
