@@ -78,13 +78,16 @@ class RstTranslator(nodes.NodeVisitor):
             self.indent = STDINDENT
         self.wrapper = textwrap.TextWrapper(width=MAXWIDTH, break_long_words=False, break_on_hyphens=False)
 
-    def log_unknown(self, type, node):
+    def log_warning(self, message):
         logger = logging.getLogger("sphinxcontrib.writers.rst")
         if len(logger.handlers) == 0:
             # Logging is not yet configured. Configure it.
             logging.basicConfig(level=logging.INFO, stream=sys.stderr, format='%(levelname)-8s %(message)s')
             logger = logging.getLogger("sphinxcontrib.writers.rst")
-        logger.warning("%s(%s) unsupported formatting" % (type, node))
+        logger.warning(message)
+
+    def log_unknown(self, type, node):
+        self.log_warning("%s(%s) unsupported formatting" % (type, node))
 
     def wrap(self, text, width=MAXWIDTH):
         self.wrapper.width = width
@@ -398,8 +401,7 @@ class RstTranslator(nodes.NodeVisitor):
 
     def visit_entry(self, node):
         if 'morerows' in node or 'morecols' in node:
-            raise NotImplementedError('Column or row spanning cells are '
-                                      'not implemented.')
+            self.log_message('Column or row spanning cells are not implemented.')
         self.new_state(0)
     def depart_entry(self, node):
         text = self.nl.join(self.nl.join(x[1]) for x in self.states.pop())
@@ -408,7 +410,7 @@ class RstTranslator(nodes.NodeVisitor):
 
     def visit_table(self, node):
         if self.table:
-            raise NotImplementedError('Nested tables are not supported.')
+            self.log_message('Nested tables are not supported.')
         self.new_state(0)
         self.table = [[]]
     def depart_table(self, node):
@@ -849,6 +851,9 @@ class RstTranslator(nodes.NodeVisitor):
         raise nodes.SkipNode
 
     def unknown_visit(self, node):
-        raise NotImplementedError('Unknown node: ' + node.__class__.__name__)
+        self.log_unknown(node.__class__.__name__, node)
+        
+    def unknown_departure(self, node):
+        pass
 
     default_visit = unknown_visit
