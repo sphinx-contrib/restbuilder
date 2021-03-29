@@ -99,13 +99,13 @@ Supported versions
 
 * The same applies for Sphinx 1.4 - 1.8. Sphinx 1.x is partially
   supported: some basis tests will work, but other tests are known to
-  fail are disabled. We consider pull requests to add Sphinx 1.x
+  fail, and are disabled. We consider pull requests to add Sphinx 1.x
   support for these features, but will not actively fix it ourselves.
   Look for ``@pytest.mark.skipif`` decorators in the test functions to
   see which features are currently not supported.
 
 .. _`oldstable/sphinx-doc`: https://packages.debian.org/oldstable/sphinx-doc
-.. _`oldstable/python`: https://packages.debian.org/oldstable/python3
+.. _`oldstable/python3`: https://packages.debian.org/oldstable/python3
 
 
 Publishing versions
@@ -114,7 +114,7 @@ Publishing versions
 The code is available on the Python package index at
 https://pypi.org/project/sphinxcontrib-restbuilder/.
 
-This section is only relevant for administrators.
+This section is only relevant for maintainers.
 
 Creating a release
 ------------------
@@ -122,14 +122,14 @@ Creating a release
 Change the following files::
 
     CHANGES.rst
-    CONTRIBUTORS.txt   (Add new contributors, if any)
-    setup.py           (Change version constant)
+    CONTRIBUTORS.txt                (Add new contributors, if any)
+    sphinxcontrib/restbuilder.py    (Change version constant)
 
 Commit the changes, add a tag, and upload the changes::
 
     git add CHANGES.rst CONTRIBUTORS.txt setup.py
     git commit -m "Bump version number to x.y.z"
-    git tag -a version-x.y.z HEAD
+    git tag -a vx.y.z HEAD
     git push --tags
 
 Publish a release at GitHub
