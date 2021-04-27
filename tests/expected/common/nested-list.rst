@@ -1,10 +1,13 @@
 * first item
 * second item
-    * first sub item
-    * second sub item
-    * third sub item
+
+  * first sub item
+  * second sub item,
+    over multiple line
+  * third sub item
+
 * third item
-* forth item
+* fourth item
 
 
 1. Item 1 initial text.

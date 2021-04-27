@@ -679,9 +679,9 @@ class RstTranslator(nodes.NodeVisitor):
         self.end_state()
 
     def visit_compact_paragraph(self, node):
-        pass
+        self.visit_paragraph(node)
     def depart_compact_paragraph(self, node):
-        pass
+        self.depart_paragraph(node)
 
     def visit_paragraph(self, node):
         if not isinstance(node.parent, nodes.Admonition) or \
