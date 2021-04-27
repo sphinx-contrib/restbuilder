@@ -401,7 +401,7 @@ class RstTranslator(nodes.NodeVisitor):
 
     def visit_entry(self, node):
         if 'morerows' in node or 'morecols' in node:
-            self.log_message('Column or row spanning cells are not implemented.')
+            self.log_warning('Column or row spanning cells are not implemented.')
         self.new_state(0)
     def depart_entry(self, node):
         text = self.nl.join(self.nl.join(x[1]) for x in self.states.pop())
@@ -410,7 +410,7 @@ class RstTranslator(nodes.NodeVisitor):
 
     def visit_table(self, node):
         if self.table:
-            self.log_message('Nested tables are not supported.')
+            self.log_warning('Nested tables are not supported.')
         self.new_state(0)
         self.table = [[]]
     def depart_table(self, node):
