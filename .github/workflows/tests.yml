@@ -15,8 +15,8 @@ jobs:
       # If you change the test matrix, also change it in tox.ini
       matrix:
         # Test the latest stable Sphinx version on all current Python versions
-        sphinx: [3.4]
-        python: [3.5, 3.6, 3.7, 3.8, 3.9]
+        sphinx: ['4.0']
+        python: [3.6, 3.7, 3.8, 3.9]
         include:
           # Also test oldest support Sphinx version for each Python version
           # and ensure that we test all major versions of Sphinx too.
@@ -43,10 +43,8 @@ jobs:
             python: 3.9
           - sphinx: '3.0'
             python: 3.9
-        exclude:
-          # Sphinx 4.0 dropped support for Python 3.5
-          - sphinx: 4.0
-            python: 3.5
+          - sphinx: 3.4
+            python: 3.9
     name: Python ${{ matrix.python }} - Sphinx ${{ matrix.sphinx }}
     steps:
     - name: Checkout latest commit

@@ -3,7 +3,7 @@ Changelog
 
 restbuilder 0.3 (28 February 2021)
 ----------------------------------
-* Now requires Sphinx 1.4 or higher (drop support for 1.0-1.3)
+* Now requires Sphinx 1.4 or higher (drop support for 1.0-1.3), support Sphinx 4.x.
 * Now requires Python 2.7, or Python 3.5 or higher (drop support for 3.0-3.4)
   Note: Python 2.7 and 3.5 are end of life and will no longer be actively supported.
 * Fix indentation for multi-line lists (Ned Batchelder)
