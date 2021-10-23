@@ -374,7 +374,7 @@ class RstTranslator(nodes.NodeVisitor):
         raise nodes.SkipNode
 
     def visit_colspec(self, node):
-        self.table[0].append(node['colwidth'])
+        self.table[0].append(round(node['colwidth']))
         raise nodes.SkipNode
 
     def visit_tgroup(self, node):
