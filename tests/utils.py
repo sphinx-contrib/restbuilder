@@ -91,13 +91,23 @@ def build_sphinx(src_dir, output_dir, files=None, config={}):
         app.build(force_all=force_all, filenames=filenames)
 
 
+def normalize_version_text(text):
+    """
+    Normalize version directive text for comparison across Sphinx versions.
+    Sphinx 7.3+ changed "New in version" to "Added in version".
+    """
+    return text.replace('Added in version', 'New in version')
+
+
 def assert_node_equal(output, expected):
     assert type(output) == type(expected)
     if isinstance(output, Text):
         output_text = output.replace('\r\n', ' ')
         output_text = output_text.replace('\n', ' ')
+        output_text = normalize_version_text(output_text)
         expected_text = expected.replace('\r\n', ' ')
         expected_text = expected_text.replace('\n', ' ')
+        expected_text = normalize_version_text(expected_text)
         assert output_text == expected_text
     elif isinstance(output, system_message):
         assert len(output.children) == len(expected.children)

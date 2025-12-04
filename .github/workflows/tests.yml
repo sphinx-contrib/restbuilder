@@ -15,48 +15,44 @@ jobs:
       # If you change the test matrix, also change it in tox.ini
       matrix:
         # Test the latest stable Sphinx version on all current Python versions
-        sphinx: ['4.0']
-        python: [3.6, 3.7, 3.8, 3.9]
+        sphinx: ['8.0']
+        python: ['3.10', '3.11', '3.12', '3.13']
         include:
-          # Also test oldest support Sphinx version for each Python version
-          # and ensure that we test all major versions of Sphinx too.
+          # Also test older Sphinx versions on compatible Python versions
           # Note: X.0 versions must be quoted as string; Github would otherwise
           # set them as "X" (without the ".0"), which is undefined in tox.ini.
 
-          # Sphinx 1.4 added support for Python 3.5
-          - sphinx: 1.4
-            python: 2.7
-          - sphinx: 1.4
-            python: 3.5
-          - sphinx: '2.0'
-            python: 3.5
-          # Sphinx 1.5 added support for Python 3.6
-          - sphinx: 1.5
-            python: 3.6
-          # Sphinx 1.8 added support for Python 3.7 and 3.8
-          - sphinx: 1.8
-            python: 2.7
-          - sphinx: 1.8
-            python: 3.8
-          # Sphinx 2.4 added support for Python 3.9
-          - sphinx: 2.4
-            python: 3.9
-          - sphinx: '3.0'
-            python: 3.9
-          - sphinx: 3.4
-            python: 3.9
+          # Sphinx 5.x supports Python 3.6-3.11
+          - sphinx: '5.0'
+            python: '3.10'
+          - sphinx: '5.0'
+            python: '3.11'
+          # Sphinx 6.x supports Python 3.8-3.11
+          - sphinx: '6.0'
+            python: '3.10'
+          - sphinx: '6.0'
+            python: '3.11'
+          # Sphinx 7.x supports Python 3.9-3.13
+          - sphinx: '7.0'
+            python: '3.10'
+          - sphinx: '7.0'
+            python: '3.11'
+          - sphinx: '7.0'
+            python: '3.12'
+          - sphinx: '7.0'
+            python: '3.13'
     name: Python ${{ matrix.python }} - Sphinx ${{ matrix.sphinx }}
     steps:
     - name: Checkout latest commit
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python }}
 
     - name: Cache pip
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       id: cache-pip
       with:
         path: ~/.cache/pip

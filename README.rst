@@ -13,15 +13,6 @@ extension to automatically generate documentation for use by any rst parser
 In itself, the extension is fairly straightforward -- it takes the parsed reST
 file from Sphinx_ and outputs it as reST.
 
-Requirements
-============
-
-* Sphinx_ 2.0
-* Python 3.5
-
-Sphinx 1.4 - 1.8 and Python 2.7 are partly supported. It does work, but some
-markup may not parse correctly.
-
 Installing
 ==========
 

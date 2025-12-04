@@ -4,20 +4,12 @@ from setuptools import setup, find_packages
 
 def get_restbuilder_version():
     # load sphinxcontrib.restbuilder from local path.
-    # (Lots of work, just to get the version info)
     from os.path import join, dirname
-    import sys
+    import importlib.util
     restbuilder_path = join(dirname(__file__), 'sphinxcontrib', 'restbuilder.py')
-    if sys.version_info >= (3, 5):
-        # requires Python 3.5 or up.
-        import importlib.util
-        spec = importlib.util.spec_from_file_location('sphinxcontrib.restbuilder', restbuilder_path)
-        restbuilder = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(restbuilder)
-    else:
-        # Python 2.7 support
-        import imp
-        restbuilder = imp.load_source('sphinxcontrib.restbuilder', restbuilder_path)
+    spec = importlib.util.spec_from_file_location('sphinxcontrib.restbuilder', restbuilder_path)
+    restbuilder = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(restbuilder)
     return restbuilder.__version__
 
 long_desc = '''
@@ -34,7 +26,7 @@ reStructuredText file from Sphinx_ and outputs it as reStructuredText.
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
 '''
 
-requires = ['Sphinx>=1.4', 'docutils']
+requires = ['Sphinx>=5.0', 'docutils']
 
 setup(
     name='sphinxcontrib-restbuilder',
@@ -54,14 +46,17 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
         'Topic :: Documentation :: Sphinx',
         'Topic :: Software Development :: Documentation',
         'Topic :: Text Processing :: Markup :: reStructuredText',
     ],
     platforms='any',
-    python_requires='>=2.7, !=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*',
+    python_requires='>=3.10',
     packages=find_packages(exclude=['tests']),
     include_package_data=True,
     install_requires=requires,
